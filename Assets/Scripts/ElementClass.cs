@@ -10,70 +10,61 @@ public enum ResultElemInter
     ALLY = 1
 }
 
-public enum Element
+public enum Elements
 {
     NORMAL,
     WATER,
     FIRE,
-    EARTH,
-    AIR,
-
-    WOOD,
-    ICE,
-    NONE,
+    ELECTRICITY
 }
 
-public struct ElementInteractions{
-    public Element baseElement;
-    public List<Element> allyElements;
-    public List<Element> enemyElements;
+public static class ElementChecks {
+    
+    private static PlayerController player = null;
 
-    public ElementInteractions(Element argBaseElement, List<Element> argAllyElements, List<Element> argEnemyElements)
+    public static void Init(PlayerController playerController)
     {
-        baseElement = argBaseElement;
-        allyElements = argAllyElements;
-        enemyElements = argEnemyElements;
+        player = playerController;
     }
-}
 
-
-public static class ElementClass {
-
-        // CONSTRUCTOR          | BASE ELEMENT  | ALLY ELEMENTS                                                     | ENEMY ELEMENTS
-    static ElementInteractions[] interactions  = new ElementInteractions[] {
-        new ElementInteractions(Element.NORMAL, new List<Element>(),                                                new List<Element>()),
-        new ElementInteractions(Element.WATER,  new List<Element>(new Element[] { Element.ICE }),                   new List<Element>()),
-        new ElementInteractions(Element.FIRE,   new List<Element>(new Element[] { Element.AIR }),                   new List<Element>(new Element[] { Element.WATER})),
-        new ElementInteractions(Element.EARTH,  new List<Element>(new Element[] { Element.WATER, Element.AIR }),    new List<Element>(new Element[] { Element.FIRE})),
-        new ElementInteractions(Element.AIR,    new List<Element>(),                                                new List<Element>()),
-        new ElementInteractions(Element.WOOD,   new List<Element>(),                                                new List<Element>(new Element[] { Element.FIRE})),
-        new ElementInteractions(Element.ICE,    new List<Element>(new Element[] { Element.WATER }),                 new List<Element>(new Element[] { Element.FIRE}))
-    };
-
-	public static ResultElemInter CheckElements(Element baseElement, Element otherElement)
+    public static ResultElemInter ComparePlayerElem(Elements goodElement, List<Elements> badElements)
     {
-        ElementInteractions interaction = new ElementInteractions(Element.NONE, new List<Element>(), new List<Element>());
-
-        for (int i = 0; i < interactions.Length; i++)
-        {
-            if (baseElement == interactions[i].baseElement)
-            {
-                interaction = interactions[i];
-                break;
-            }
-        }
-
-        if (interaction.baseElement == Element.NONE)
-        {
-            Debug.LogError("ELEMENT " + interaction.baseElement.ToString() + " IS NOT DEFINED IN THE TABLE.");
-            return ResultElemInter.UNKNOWN;
-        }
-
-        if(interaction.allyElements.Contains(otherElement))
+        Elements playerElem = player.GetElem();
+        if (goodElement == playerElem)
             return ResultElemInter.ALLY;
-        if (interaction.enemyElements.Contains(otherElement))
+        if (badElements.Contains(playerElem))
             return ResultElemInter.ENEMY;
 
         return ResultElemInter.NORMAL;
+    }
+
+    public static bool ChangePlayerElem(Elements newElem)
+    {
+        if (player == null)
+            Debug.LogError("Player not set in element class.");
+
+        Elements playerElem = player.GetElem();
+        if(playerElem == Elements.NORMAL || newElem == Elements.NORMAL)
+        {
+            playerElem = newElem;
+            player.SetElem(newElem);
+            return true;
+        } 
+        else
+        {
+            return false;
+        }
+    }
+
+    public static Elements GetPlayerElem()
+    {
+        if (player == null)
+            Debug.LogError("Player not set in element class.");
+        return player.GetElem();
+    }
+
+    public static PlayerController GetPlayerController()
+    {
+        return player;
     }
 }

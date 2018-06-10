@@ -11,10 +11,12 @@ public class PlayerController : MonoBehaviour {
 
     public bool canJump = false;
 
-    public Element playerElem = Element.NORMAL;
+    public Elements playerElem = Elements.NORMAL;
 
     // Use this for initialization
     void Start () {
+        ElementChecks.Init(this);
+
         spriteRenderer = GetComponent<SpriteRenderer>();
         rigid = GetComponent<Rigidbody2D>();
     }
@@ -45,14 +47,14 @@ public class PlayerController : MonoBehaviour {
         }
     }
 
-    public void SetElem(Element newElem)
+    public void SetElem(Elements newElem)
     {
         playerElem = newElem;
-        if (playerElem == Element.FIRE)
+        if (playerElem == Elements.FIRE)
             spriteRenderer.color = Color.red;
     }
 
-    public Element GetElem()
+    public Elements GetElem()
     {
         return playerElem;
     }

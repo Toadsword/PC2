@@ -4,26 +4,27 @@ using UnityEngine;
 
 public class ObjectBehavior : MonoBehaviour {
 
-    [SerializeField] Element objElem;
+    [SerializeField] Elements objGoodElem;
+    [SerializeField] List<Elements> objEnemyElem;
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
+    [SerializeField] ScriptableObject goodAction;
+    [SerializeField] ScriptableObject badAction;
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if(collision.transform.tag == "Player")
         {
-            Element playerElem = collision.transform.GetComponent<PlayerController>().GetElem();
-            if(ElementClass.CheckElements(objElem, playerElem) == ResultElemInter.ENEMY)
+            Elements playerElem = collision.transform.GetComponent<PlayerController>().GetElem();
+            ResultElemInter result = ElementChecks.ComparePlayerElem(objGoodElem, objEnemyElem);
+            switch(result)
             {
-                Destroy(gameObject);
+                case ResultElemInter.ALLY:
+                    Destroy(gameObject);
+                    //goodAction.ToString();
+                    break;
+                case ResultElemInter.ENEMY:
+                    //badAction.ToString();
+                    break;
             }
         }
     }

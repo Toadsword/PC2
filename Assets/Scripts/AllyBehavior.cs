@@ -4,14 +4,14 @@ using UnityEngine;
 
 public class AllyBehavior : MonoBehaviour {
 
-    public Element allyElem;
+    public Elements allyElem;
 
 	// Use this for initialization
 	void Start () {
-        allyElem = Element.FIRE;
+        allyElem = Elements.FIRE;
     }
 	
-    public Element GetElement()
+    public Elements GetElement()
     {
         return allyElem;
     }
@@ -20,7 +20,7 @@ public class AllyBehavior : MonoBehaviour {
     {
         if(collision.tag == "Player")
         {
-            collision.GetComponent<PlayerController>().SetElem(allyElem);
+            ElementChecks.ChangePlayerElem(allyElem);
         }
     }
 }
